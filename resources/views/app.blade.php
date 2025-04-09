@@ -20,7 +20,11 @@
     </script>  
 
     {{-- Inline style to set the HTML background color based on our theme in app.css --}}  
-    <style>  
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Moul&family=Siemreap&display=swap');
+        *{
+            font-family: 'Siemreap', sans-serif;
+        }
         html {  
             background-color: oklch(1 0 0);  
         }  
@@ -34,6 +38,7 @@
 
     <link rel="preconnect" href="https://fonts.bunny.net">  
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />  
+    
 
     @routes  
     @viteReactRefresh  
