@@ -4,28 +4,53 @@ import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { type NavItem } from '@/types';
 import { Link } from '@inertiajs/react';
-import { BookOpen, Folder, LayoutGrid } from 'lucide-react';
+import { BookOpen, Folder, LayoutGrid ,ShieldPlus,School,CopyCheck,GraduationCap ,CalendarCheck2} from 'lucide-react';
 import AppLogo from './app-logo';
 
 const mainNavItems: NavItem[] = [
     {
-        title: 'Dashboard',
+        title: 'គ្រប់គ្រង',
         href: '/dashboard',
         icon: LayoutGrid, 
+    },
+    {
+        title:'សាស្រ្តាចារ្យ',
+        href:'/teacher',
+        icon:ShieldPlus,
+    },
+    {
+        title:'និស្សិត',
+        href:'/student',
+        icon:GraduationCap,
+    },
+    {
+        title:'កាល វិភាគ',
+        href:'/Schedule',
+        icon:CalendarCheck2,
+    },
+    {
+        title:'ថ្នាក់',
+        href:'/class',
+        icon:School,
+    },
+    {
+        title:'វត្តមាន',
+        href:'/attendance',
+        icon:CopyCheck,
     },
 ];
 
 const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/Teacher-Yien',
-        icon: Folder,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://github.com/Teacher-Yien',
-        icon: BookOpen,
-    },
+    // {
+    //     title: 'Repository',
+    //     href: 'https://github.com/Teacher-Yien',
+    //     icon: Folder,
+    // },
+    // {
+    //     title: 'Documentation',
+    //     href: 'https://github.com/Teacher-Yien',
+    //     icon: BookOpen,
+    // },
 ];
 
 export function AppSidebar() {
@@ -39,12 +64,13 @@ export function AppSidebar() {
                                 <AppLogo />
                             </Link>
                         </SidebarMenuButton>
+                        
                     </SidebarMenuItem>
                 </SidebarMenu>
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain  items={mainNavItems} />
             </SidebarContent>
 
             <SidebarFooter>
