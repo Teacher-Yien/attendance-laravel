@@ -5,10 +5,13 @@ export default {
     "./resources/js/**/*.tsx",
     "./resources/js/**/*.ts",
     "./resources/js/**/*.jsx",
-    "./resources/js/**/*.vue"
+    "./resources/js/**/*.vue",
+    "./node_modules/flowbite/**/*.js" // <--- Important!
   ],
   theme: {
     extend: {},
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin') // <--- Add this
+  ],
 };

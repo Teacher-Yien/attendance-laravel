@@ -15,7 +15,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title:'សាស្រ្តាចារ្យ',
-        href:'/teacher',
+        href:'/professor',
         icon:ShieldPlus,
     },
     {
