@@ -20,7 +20,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title:'និស្សិត',
-        href:'/student',
+        href:'/students',
         icon:GraduationCap,
     },
     {
@@ -30,7 +30,7 @@ const mainNavItems: NavItem[] = [
     },
     {
         title:'ថ្នាក់',
-        href:'/class',
+        href:'/classes',
         icon:School,
     },
     {

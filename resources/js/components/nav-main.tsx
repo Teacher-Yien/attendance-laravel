@@ -11,7 +11,16 @@ export function NavMain({ items = [] }: { items: NavItem[] }) {
                 {items.map((item) => (
                     <SidebarMenuItem key={item.title}>
                         <SidebarMenuButton asChild isActive={item.href === page.url}>
-                            <Link href={item.href} prefetch className=' border border-red-600 hover:bg-red-600 hover:text-white'>
+                            <Link href={item.href} prefetch className='
+                            flex items-center px-3 py-2 rounded
+                            border border-red-600
+                            hover:bg-red-600 hover:text-white
+
+                            focus:outline-none       
+                            focus:bg-red-600          
+                            focus:text-white         
+                            focus:ring-2             
+                            focus:ring-red-400    '>
                                 {item.icon && <item.icon />}
                                 <span className=' p-2'>{item.title}</span>
                             </Link>
