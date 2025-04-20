@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ProfessorController;
+use App\Http\Controllers\ClassController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -31,6 +32,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('classes', function () {
         return Inertia::render('classes');
     })->name('classes');
+    Route::get('/class', [ClassController::class, 'index']);
+    Route::post('/class', [ClassController::class, 'store']);
+    Route::put('/class/{id}', [ClassController::class, 'update']);
+    Route::delete('/class/{id}', [ClassController::class, 'destroy']);
 
 
 });

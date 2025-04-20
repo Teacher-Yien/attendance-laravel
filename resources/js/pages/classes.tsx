@@ -13,24 +13,28 @@ type Class = {
 };
 
 type Program = { id: number; name: string };
-type Year    = { id: number; label: string };
+type Year = { id: number; label: string };
 type Semester = { id: number; label: string };
 
 type PageProps = {
-  classes: Class[];
-  programs: Program[];
-  years: Year[];
-  semesters: Semester[];
+  classes?: Class[];
+  programs?: Program[];
+  years?: Year[];
+  semesters?: Semester[];
 };
 
 export default function Classes() {
   const { props } = usePage<PageProps>();
-  const { classes, programs, years, semesters } = props;
+  const {
+    classes = [],
+    programs = [],
+    years = [],
+    semesters = [],
+  } = props || {};
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<number | null>(null);
 
-  // Inertia form
   const { data, setData, post, put, processing, reset, errors } = useForm({
     ClassName: '',
     ProgramID: '',
@@ -43,6 +47,7 @@ export default function Classes() {
     setEditingId(null);
     setModalOpen(true);
   };
+
   const openEdit = (cls: Class) => {
     setEditingId(cls.ClassID);
     setData({
@@ -53,6 +58,7 @@ export default function Classes() {
     });
     setModalOpen(true);
   };
+
   const closeModal = () => {
     reset();
     setEditingId(null);
@@ -61,16 +67,14 @@ export default function Classes() {
 
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
-    const url = editingId
-      ? `/class/${editingId}`
-      : '/class';
+    const url = editingId ? `/class/${editingId}` : '/class';
     const method = editingId ? put : post;
 
     method(url, {
       onSuccess: () => {
         Swal.fire({
-          title: 'Success!',
-          text: editingId ? 'Class updated.' : 'Class created.',
+          title: 'ជោគជ័យ!',
+          text: editingId ? 'កែប្រែថ្នាក់រួចរាល់' : 'បន្ថែមថ្នាក់ថ្មីបានជោគជ័យ។',
           icon: 'success',
         });
         closeModal();
@@ -80,46 +84,72 @@ export default function Classes() {
 
   const handleDelete = (id: number) => {
     Swal.fire({
-      title: 'Delete this class?',
+      title: 'តើអ្នកចង់លុបថ្នាក់នេះមែនទេ?',
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Yes, delete',
+      confirmButtonText: 'លុប',
     }).then((r) => {
       if (r.isConfirmed) {
         Inertia.delete(`/class/${id}`);
-        Swal.fire('Deleted!', '', 'success');
+        Swal.fire('លុបរួចរាល់!', '', 'success');
       }
     });
   };
 
   return (
     <AppLayout>
-      <Head title="Create Classes" />
+      <Head title="គ្រប់គ្រងថ្នាក់" />
 
-      <div className="p-4">
-        <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-semibold">គ្រប់គ្រងថ្នាក់</h1>
-          <button
-            onClick={openCreate}
-            className="border border-red-600 text-black hover:bg-red-700 hover:text-white px-4 py-1 rounded font-semibold"
-          >
-            + បន្តែមថ្នាក់ថ្មី
-          </button>
-        </div> 
-
-        {/* Classes Table */}
-        <div className="grid grid-cols-5 ">
-          <div className="content-class p-5 rounded border border-dotted border-red-500 ">
-												<h1 className=' text-black font-semibold p-1'>ថ្នាក់: </h1>
-												<h1 className=' text-black font-semibold p-1'>ឆ្នាំទី: </h1>
-												<h1 className=' text-black font-semibold p-1'>ឆមាសទី: </h1>
-												<h1 className=' text-black font-semibold'>សិស្សសរុប: </h1>
-												<button className=' p-1 rounded font-semibold w-full border border-red-600 mt-3'>បញ្ចូលសិស្ស</button>
-										</div>
-        </div>
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-semibold p-3">គ្រប់គ្រងថ្នាក់</h1>
+        <button
+          onClick={openCreate}
+          className="border border-black text-black hover:bg-red-700 hover:text-white px-4 py-1 rounded font-semibold"
+        >
+          + បន្ថែមថ្នាក់ថ្មី
+        </button>
       </div>
 
-      {/* Create / Edit Modal */}
+      {classes.length === 0 ? (
+        <p className="text-gray-500">មិនទាន់មានថ្នាក់។</p>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {classes.map(cls => {
+            const program = programs.find(p => p.id === cls.ProgramID);
+            const year = years.find(y => y.id === cls.YearID);
+            const semester = semesters.find(s => s.id === cls.SemesterID);
+
+            return (
+              <div key={cls.ClassID} className="border rounded-lg shadow p-4 bg-white">
+                <h2 className="text-lg font-bold text-blue-800 mb-2">{cls.ClassName}</h2>
+                <p><span className="font-semibold">កម្មវិធី:</span> {program?.name}</p>
+                <p><span className="font-semibold">ឆ្នាំទី:</span> {year?.label}</p>
+                <p><span className="font-semibold">ឆមាសទី:</span> {semester?.label}</p>
+                <p><span className="font-semibold">សិស្សសរុប:</span> ...</p>
+
+                <div className="mt-3 flex gap-2">
+                  <button className="flex-1 border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white px-2 py-1 rounded">
+                    មើលសិស្ស
+                  </button>
+                  <button
+                    onClick={() => openEdit(cls)}
+                    className="border border-yellow-500 text-yellow-500 hover:bg-yellow-500 hover:text-white px-2 py-1 rounded"
+                  >
+                    កែប្រែ
+                  </button>
+                  <button
+                    onClick={() => handleDelete(cls.ClassID)}
+                    className="border border-red-500 text-red-500 hover:bg-red-500 hover:text-white px-2 py-1 rounded"
+                  >
+                    លុប
+                  </button>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {modalOpen && (
         <div
           onClick={closeModal}
@@ -131,13 +161,13 @@ export default function Classes() {
           >
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-medium">
-                {editingId ? 'Edit Class' : 'New Class'}
+                {editingId ? 'កែប្រែថ្នាក់' : 'ថ្នាក់ថ្មី'}
               </h2>
               <button onClick={closeModal}>✕</button>
             </div>
             <form onSubmit={submit} className="space-y-4">
               <div>
-                <label className="block mb-1">Class Name</label>
+                <label className="block mb-1">ឈ្មោះថ្នាក់</label>
                 <input
                   type="text"
                   value={data.ClassName}
@@ -149,14 +179,14 @@ export default function Classes() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div>
-                  <label className="block mb-1">Program</label>
+                  <label className="block mb-1">កម្មវិធី</label>
                   <select
                     value={data.ProgramID}
                     onChange={e => setData('ProgramID', e.target.value)}
                     className="w-full border rounded p-2"
                     required
                   >
-                    <option value="">Select</option>
+                    <option value="">ជ្រើសរើស</option>
                     {programs.map(p => (
                       <option key={p.id} value={p.id}>{p.name}</option>
                     ))}
@@ -164,14 +194,14 @@ export default function Classes() {
                   {errors.ProgramID && <p className="text-red-500 text-sm">{errors.ProgramID}</p>}
                 </div>
                 <div>
-                  <label className="block mb-1">Year</label>
+                  <label className="block mb-1">ឆ្នាំទី</label>
                   <select
                     value={data.YearID}
                     onChange={e => setData('YearID', e.target.value)}
                     className="w-full border rounded p-2"
                     required
                   >
-                    <option value="">Select</option>
+                    <option value="">ជ្រើសរើស</option>
                     {years.map(y => (
                       <option key={y.id} value={y.id}>{y.label}</option>
                     ))}
@@ -179,14 +209,14 @@ export default function Classes() {
                   {errors.YearID && <p className="text-red-500 text-sm">{errors.YearID}</p>}
                 </div>
                 <div>
-                  <label className="block mb-1">Semester</label>
+                  <label className="block mb-1">ឆមាស</label>
                   <select
                     value={data.SemesterID}
                     onChange={e => setData('SemesterID', e.target.value)}
                     className="w-full border rounded p-2"
                     required
                   >
-                    <option value="">Select</option>
+                    <option value="">ជ្រើសរើស</option>
                     {semesters.map(s => (
                       <option key={s.id} value={s.id}>{s.label}</option>
                     ))}
@@ -200,7 +230,7 @@ export default function Classes() {
                   disabled={processing}
                   className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
                 >
-                  {editingId ? 'Update' : 'Create'}
+                  {editingId ? 'កែប្រែ' : 'បន្ថែម'}
                 </button>
               </div>
             </form>
