@@ -1,31 +1,23 @@
-<?php
-// app/Models/ClassModel.php
-namespace App\Models;
+<?php  
+// app/Models/Year.php  
+namespace App\Models;  
 
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Model;  
 
-class ClassModel extends Model
-{
-    protected $table = 'classes';
-    protected $primaryKey = 'ClassID';
-    public $timestamps = false;
+class Year extends Model  
+{  
+    protected $table = 'years'; // Make sure this matches your final table name  
 
-    protected $fillable = [
-        'ClassName',
-        'ProgramID',
-        'YearID',
-        'SemesterID',
-    ];
+    // Specify the primary key if it's different from 'id'  
+    protected $primaryKey = 'YearID';  
 
-    public function program() {
-        return $this->belongsTo(Program::class, 'ProgramID');
-    }
+    // If your table doesn't use timestamps  
+    public $timestamps = false;  
 
-    public function year() {
-        return $this->belongsTo(Year::class, 'YearID');
-    }
-
-    public function semester() {
-        return $this->belongsTo(Semester::class, 'SemesterID');
-    }
-}
+    // Specify the fillable attributes  
+    protected $fillable = [  
+        'YearName',  
+        'StartDate',  
+        'EndDate',  
+    ];  
+}   

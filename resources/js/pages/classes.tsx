@@ -1,99 +1,149 @@
-import { Head, useForm, usePage } from '@inertiajs/react';
-import { Inertia } from '@inertiajs/inertia';
-import AppLayout from '@/layouts/app-layout';
-import Swal from 'sweetalert2';
-import { useState } from 'react';
+import { Head, useForm, usePage } from '@inertiajs/react';  
+import { Inertia } from '@inertiajs/inertia';  
+import AppLayout from '@/layouts/app-layout';  
+import Swal from 'sweetalert2';  
+import { useState, useEffect } from 'react';  
 
-type Class = {
-  ClassID: number;
-  ClassName: string;
-  ProgramID: number;
-  YearID: number;
-  SemesterID: number;
-};
+type Class = {  
+  ClassID: number;  
+  ClassName: string;  
+  ProgramID: number;  
+  YearID: number;  
+  SemesterID: number;  
+};  
 
-type Program = { id: number; name: string };
-type Year = { id: number; label: string };
-type Semester = { id: number; label: string };
+type Program = { ProgramID: number; ProgramName: string };  
+type Year = { YearID: number; YearName: string };  
+type Semester = { SemesterID: number; semesterName: string };  
 
-type PageProps = {
-  classes?: Class[];
-  programs?: Program[];
-  years?: Year[];
-  semesters?: Semester[];
-};
+type PageProps = {  
+  classes?: Class[];  
+  programs?: Program[];  
+  years?: Year[];  
+  semesters?: Semester[];  
+};  
 
-export default function Classes() {
-  const { props } = usePage<PageProps>();
-  const {
-    classes = [],
-    programs = [],
-    years = [],
-    semesters = [],
-  } = props || {};
+// Fixed component name to start with capital letter
+export default function Classes() {  
+  const { props } = usePage<PageProps>();  
+  const {  
+    classes = [],  
+    programs = [],  
+    years = [],  
+    semesters = [],  
+  } = props || {};  
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editingId, setEditingId] = useState<number | null>(null);
+  // For debugging purposes
+  console.log("programs: " + programs);
+  console.log("years: " + years.length);
+  console.log("semesters: " + semesters.length);
+  
+  const [modalOpen, setModalOpen] = useState(false);  
+  const [editingId, setEditingId] = useState<number | null>(null);  
 
-  const { data, setData, post, put, processing, reset, errors } = useForm({
-    ClassName: '',
-    ProgramID: '',
-    YearID: '',
-    SemesterID: '',
-  });
+  // Fix: Updated form types to match expected values
+  const { data, setData, post, put, processing, reset, errors } = useForm({  
+    ClassName: '',  
+    ProgramID: '',  
+    YearID: '',  
+    SemesterID: '',  
+  });  
 
-  const openCreate = () => {
-    reset();
-    setEditingId(null);
-    setModalOpen(true);
-  };
+  useEffect(() => {  
+    // Reset form on modal close  
+    if (!modalOpen) {  
+      reset();  
+      setEditingId(null);  
+    }  
+  }, [modalOpen]);  
 
-  const openEdit = (cls: Class) => {
-    setEditingId(cls.ClassID);
-    setData({
-      ClassName: cls.ClassName,
-      ProgramID: String(cls.ProgramID),
-      YearID: String(cls.YearID),
-      SemesterID: String(cls.SemesterID),
-    });
-    setModalOpen(true);
-  };
+  const openCreate = () => {  
+    reset();  
+    setEditingId(null);  
+    setModalOpen(true);  
+  };  
 
-  const closeModal = () => {
-    reset();
-    setEditingId(null);
-    setModalOpen(false);
-  };
+  const openEdit = (cls: Class) => {  
+    setEditingId(cls.ClassID);  
+    setData({  
+      ClassName: cls.ClassName,  
+      ProgramID: String(cls.ProgramID),  
+      YearID: String(cls.YearID),  
+      SemesterID: String(cls.SemesterID),  
+    });  
+    setModalOpen(true);  
+  };  
 
-  const submit = (e: React.FormEvent) => {
-    e.preventDefault();
-    const url = editingId ? `/class/${editingId}` : '/class';
-    const method = editingId ? put : post;
+  const closeModal = () => setModalOpen(false);  
 
-    method(url, {
-      onSuccess: () => {
-        Swal.fire({
-          title: 'ជោគជ័យ!',
-          text: editingId ? 'កែប្រែថ្នាក់រួចរាល់' : 'បន្ថែមថ្នាក់ថ្មីបានជោគជ័យ។',
-          icon: 'success',
-        });
-        closeModal();
-      },
-    });
-  };
+  const submit = (e: React.FormEvent) => {  
+    e.preventDefault();  
+    const url = editingId ? `/class/${editingId}` : '/class';  
+    
+    if (editingId) {
+      put(url, {
+        onSuccess: () => {  
+          Swal.fire({  
+            title: 'Success!',  
+            text: 'Class updated successfully.',  
+            icon: 'success',  
+          });  
+          closeModal();  
+        },  
+        onError: (errors) => {  
+          console.error(errors);
+          Swal.fire({  
+            title: 'Error!',  
+            text: 'There was an error processing your request.',  
+            icon: 'error',  
+          });  
+        },  
+      });
+    } else {
+      post(url, {
+        onSuccess: () => {  
+          Swal.fire({  
+            title: 'Success!',  
+            text: 'New class added successfully.',  
+            icon: 'success',  
+          });  
+          closeModal();  
+        },  
+        onError: (errors) => {  
+          console.error(errors);
+          Swal.fire({  
+            title: 'Error!',  
+            text: 'There was an error processing your request.',  
+            icon: 'error',  
+          });  
+        },  
+      });
+    }
+  };  
 
   const handleDelete = (id: number) => {
-    Swal.fire({
-      title: 'តើអ្នកចង់លុបថ្នាក់នេះមែនទេ?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'លុប',
-    }).then((r) => {
-      if (r.isConfirmed) {
-        Inertia.delete(`/class/${id}`);
-        Swal.fire('លុបរួចរាល់!', '', 'success');
-      }
-    });
+    Swal.fire({  
+      title: 'Are you sure you want to delete this class?',  
+      icon: 'warning',  
+      showCancelButton: true,  
+      confirmButtonText: 'Delete',  
+    }).then((result) => {  
+      if (result.isConfirmed) {  
+        Inertia.delete(`/class/${id}`, {  
+          onSuccess: () => {  
+            Swal.fire('Deleted!', '', 'success');  
+          },  
+          onError: (error) => {  
+            console.error(error);
+            Swal.fire({  
+              title: 'Error!',  
+              text: 'There was an error deleting the class.',  
+              icon: 'error',  
+            });  
+          },  
+        });  
+      }  
+    });  
   };
 
   return (
@@ -104,6 +154,7 @@ export default function Classes() {
         <h1 className="text-2xl font-semibold p-3">គ្រប់គ្រងថ្នាក់</h1>
         <button
           onClick={openCreate}
+        
           className="border border-black text-black hover:bg-red-700 hover:text-white px-4 py-1 rounded font-semibold"
         >
           + បន្ថែមថ្នាក់ថ្មី
@@ -111,20 +162,20 @@ export default function Classes() {
       </div>
 
       {classes.length === 0 ? (
-        <p className="text-gray-500">មិនទាន់មានថ្នាក់។</p>
+        <p className="text-gray-500 text-center">មិនទាន់មានថ្នាក់</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {classes.map(cls => {
-            const program = programs.find(p => p.id === cls.ProgramID);
-            const year = years.find(y => y.id === cls.YearID);
-            const semester = semesters.find(s => s.id === cls.SemesterID);
+            const program = programs.find(p => p.ProgramID === cls.ProgramID);
+            const year = years.find(y => y.YearID === cls.YearID);
+            const semester = semesters.find(s => s.SemesterID === cls.SemesterID);
 
             return (
               <div key={cls.ClassID} className="border rounded-lg shadow p-4 bg-white">
                 <h2 className="text-lg font-bold text-blue-800 mb-2">{cls.ClassName}</h2>
-                <p><span className="font-semibold">កម្មវិធី:</span> {program?.name}</p>
-                <p><span className="font-semibold">ឆ្នាំទី:</span> {year?.label}</p>
-                <p><span className="font-semibold">ឆមាសទី:</span> {semester?.label}</p>
+                <p><span className="font-semibold">កម្មវិធី:</span> {program?.ProgramName}</p>
+                <p><span className="font-semibold">ឆ្នាំទី:</span> {year?.YearName}</p>
+                <p><span className="font-semibold">ឆមាសទី:</span> {semester?.semesterName}</p>
                 <p><span className="font-semibold">សិស្សសរុប:</span> ...</p>
 
                 <div className="mt-3 flex gap-2">
@@ -148,6 +199,7 @@ export default function Classes() {
             );
           })}
         </div>
+        
       )}
 
       {modalOpen && (
@@ -177,7 +229,7 @@ export default function Classes() {
                 />
                 {errors.ClassName && <p className="text-red-500 text-sm">{errors.ClassName}</p>}
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block mb-1">កម្មវិធី</label>
                   <select
@@ -188,7 +240,7 @@ export default function Classes() {
                   >
                     <option value="">ជ្រើសរើស</option>
                     {programs.map(p => (
-                      <option key={p.id} value={p.id}>{p.name}</option>
+                      <option className=' text-black' key={p.ProgramID} value={p.ProgramID}>{p.ProgramName}</option>
                     ))}
                   </select>
                   {errors.ProgramID && <p className="text-red-500 text-sm">{errors.ProgramID}</p>}
@@ -203,7 +255,7 @@ export default function Classes() {
                   >
                     <option value="">ជ្រើសរើស</option>
                     {years.map(y => (
-                      <option key={y.id} value={y.id}>{y.label}</option>
+                      <option key={y.YearID} value={y.YearID}>{y.YearName}</option>
                     ))}
                   </select>
                   {errors.YearID && <p className="text-red-500 text-sm">{errors.YearID}</p>}
@@ -218,7 +270,7 @@ export default function Classes() {
                   >
                     <option value="">ជ្រើសរើស</option>
                     {semesters.map(s => (
-                      <option key={s.id} value={s.id}>{s.label}</option>
+                      <option key={s.SemesterID} value={s.SemesterID}>{s.semesterName}</option>
                     ))}
                   </select>
                   {errors.SemesterID && <p className="text-red-500 text-sm">{errors.SemesterID}</p>}

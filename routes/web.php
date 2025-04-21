@@ -4,6 +4,9 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\ProfessorController;
 use App\Http\Controllers\ClassController;
+use App\Http\Controllers\ProgramController;  
+use App\Http\Controllers\YearController;  
+use App\Http\Controllers\SemesterController;
 
 Route::get('/', function () {
     return Inertia::render('welcome');
@@ -32,11 +35,34 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('classes', function () {
         return Inertia::render('classes');
     })->name('classes');
-    Route::get('/class', [ClassController::class, 'index']);
+    Route::get('/classes', [ClassController::class, 'index'])->name('classes.index');
     Route::post('/class', [ClassController::class, 'store']);
     Route::put('/class/{id}', [ClassController::class, 'update']);
     Route::delete('/class/{id}', [ClassController::class, 'destroy']);
 
+    Route::get('/programs', [ProgramController::class, 'index']);  
+    Route::get('/programs/{id}', [ProgramController::class, 'show']);  
+    Route::post('/programs', [ProgramController::class, 'store']);  
+    Route::put('/programs/{id}', [ProgramController::class, 'update']);  
+    Route::delete('/programs/{id}', [ProgramController::class, 'destroy']);  
+
+
+    Route::get('/years', [YearController::class, 'index']);  
+    Route::get('/years/{id}', [YearController::class, 'show']);  
+    Route::post('/years', [YearController::class, 'store']);  
+    Route::put('/years/{id}', [YearController::class, 'update']);  
+    Route::delete('/years/{id}', [YearController::class, 'destroy']); 
+
+
+    Route::get('/semesters', [SemesterController::class, 'index']);  
+    Route::get('/semesters/{id}', [SemesterController::class, 'show']);  
+    Route::post('/semesters', [SemesterController::class, 'store']);  
+    Route::put('/semesters/{id}', [SemesterController::class, 'update']);   
+    Route::delete('/semesters/{id}', [SemesterController::class, 'destroy']);  
+
+    Route::get('schedule', function () {
+        return Inertia::render('schedule');
+    })->name('schedule');
 
 });
 
