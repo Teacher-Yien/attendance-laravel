@@ -14,7 +14,7 @@ type Class = {
 
 type Program = { ProgramID: number; ProgramName: string };  
 type Year = { YearID: number; YearName: string };  
-type Semester = { SemesterID: number; semesterName: string };  
+type Semester = { SemesterID: number; SemesterName: string };  
 
 type PageProps = {  
   classes?: Class[];  
@@ -78,7 +78,7 @@ export default function Classes() {
 
   const submit = (e: React.FormEvent) => {  
     e.preventDefault();  
-    const url = editingId ? `/class/${editingId}` : '/class';  
+    const url = editingId ? `/classes/${editingId}` : '/classes';  
     
     if (editingId) {
       put(url, {
@@ -129,7 +129,7 @@ export default function Classes() {
       confirmButtonText: 'Delete',  
     }).then((result) => {  
       if (result.isConfirmed) {  
-        Inertia.delete(`/class/${id}`, {  
+        Inertia.delete(`/classes/${id}`, {  
           onSuccess: () => {  
             Swal.fire('Deleted!', '', 'success');  
           },  
@@ -175,7 +175,7 @@ export default function Classes() {
                 <h2 className="text-lg font-bold text-blue-800 mb-2">{cls.ClassName}</h2>
                 <p><span className="font-semibold">កម្មវិធី:</span> {program?.ProgramName}</p>
                 <p><span className="font-semibold">ឆ្នាំទី:</span> {year?.YearName}</p>
-                <p><span className="font-semibold">ឆមាសទី:</span> {semester?.semesterName}</p>
+                <p><span className="font-semibold">ឆមាសទី:</span> {semester?.SemesterName}</p>
                 <p><span className="font-semibold">សិស្សសរុប:</span> ...</p>
 
                 <div className="mt-3 flex gap-2">
@@ -270,7 +270,7 @@ export default function Classes() {
                   >
                     <option value="">ជ្រើសរើស</option>
                     {semesters.map(s => (
-                      <option key={s.SemesterID} value={s.SemesterID}>{s.semesterName}</option>
+                      <option key={s.SemesterID} value={s.SemesterID}>{s.SemesterName}</option>
                     ))}
                   </select>
                   {errors.SemesterID && <p className="text-red-500 text-sm">{errors.SemesterID}</p>}

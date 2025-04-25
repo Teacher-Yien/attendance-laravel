@@ -9,11 +9,15 @@ class Classes extends Model
     // Specify the associated table if it doesn't match the plural of the model name
     protected $table = 'classes';
 
-    // If your table doesn't use 'id' as the primary key
-    // protected $primaryKey = 'ClassID';
+    protected $primaryKey = 'ClassID';
 
-    // If your table doesn't use timestamps
-    // public $timestamps = false;
+protected $fillable = [
+    'ClassName',
+    'ProgramID',
+    'YearID',
+    'SemesterID',
+];
+
 
     // Relationships
     public function program()

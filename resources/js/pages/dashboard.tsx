@@ -15,7 +15,7 @@ export default function Dashboard() {
         <div className=' '>
             <AppLayout breadcrumbs={breadcrumbs} >
                 <Head title="Dashboard" />
-                <div className=' group p-5'>
+                <div className=' group p-5 '>
                     <img className=' w-[100px] h-[100px] mx-[45%]' src="image/rupp_logo.png" alt="" />
                     <p className=' text-center p-2 '>ប្រព័ន្ធស្រង់វត្តមានរបស់និស្សិតសកលវិទ្យាល័យភូមិន្ទភ្នំពេញ</p>
                 </div>

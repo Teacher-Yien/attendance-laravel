@@ -18,21 +18,21 @@ const mainNavItems: NavItem[] = [
         href:'/professor',
         icon:ShieldPlus,
     },
-    {
-        title:'និស្សិត',
-        href:'/students',
-        icon:GraduationCap,
-    },
+    // {
+    //     title:'និស្សិត',
+    //     href:'/students',
+    //     icon:GraduationCap,
+    // },
     {
         title:'កាល វិភាគ',
         href:'/schedule',
         icon:CalendarCheck2,
     },
-    {
-        title:'ថ្នាក់',
-        href:'/classes',
-        icon:School,
-    },
+    // {
+    //     title:'ថ្នាក់',
+    //     href:'/classes',
+    //     icon:School,
+    // },
     {
         title:'វត្តមាន',
         href:'/attendance',

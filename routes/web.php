@@ -36,9 +36,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('classes');
     })->name('classes');
     Route::get('/classes', [ClassController::class, 'index'])->name('classes.index');
-    Route::post('/class', [ClassController::class, 'store']);
-    Route::put('/class/{id}', [ClassController::class, 'update']);
-    Route::delete('/class/{id}', [ClassController::class, 'destroy']);
+    Route::post('/classes', [ClassController::class, 'store'])->name('classes.store');
+    Route::put('/classes/{id}', [ClassController::class, 'update'])->name("classes.update");
+    Route::delete('/classes/{id}', [ClassController::class, 'destroy'])->name("classes.destory");
 
     Route::get('/programs', [ProgramController::class, 'index']);  
     Route::get('/programs/{id}', [ProgramController::class, 'show']);  
